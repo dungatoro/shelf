@@ -3,8 +3,9 @@
 # The virtual machine
 class VM
   @table = {
-    :Main => [],
-    'P' => 0
+    'Main' => [],
+    'P' => [0],
+    '[' => :match_bracket
   }
   @idx = 0
 
@@ -13,7 +14,8 @@ class VM
   end
 
   def exec
-    table[@tokens[@idx]]
+    token = @tokens[@idx]
+    @table.key? token ? @table[token] : @table['main'] << token
   end
 
   def run
@@ -23,8 +25,11 @@ class VM
   def match_bracket
     opened = 1
     while opened <= 1
-      if @tokens[@idx] == ']'
-      opened -= 1
+      case @tokens[@idx]
+      when ']'
+        opened -= 1
+      when '['
+        opened += 1
       end
     end
   end
